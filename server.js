@@ -2,16 +2,14 @@ const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const { globSync } = require("glob");
 
 //โหลด env จาก env
 dotenv.config();
 //config
 const corsOptions = {
   origin: (origin, callback) => {
-    allowedOrigins.includes(origin)
-      ? callback(null, true)
-      : callback(null, true);
-    //  callback(new Error("Not allowed by CORS"));
+    callback(null, true);
   },
   credentials: true,
 };
@@ -34,6 +32,16 @@ server.use(express.json());
 server.use(cors(corsOptions));
 //ลองรับ form
 server.use(express.urlencoded({ extended: false }));
+
+console.log("file", "test");
+globSync("./api/**/*.js").forEach((file) => {
+  const customFile = file.replace(/\\/g, "/").replace("api", "./api");
+  console.log("customFile", customFile);
+  server.use((req, res, next) => {
+    require(customFile)(req, res, next);
+  });
+});
+console.log("file", "test");
 
 const PORT = process.env.PORT || 3000;
 
