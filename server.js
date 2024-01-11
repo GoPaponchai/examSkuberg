@@ -33,7 +33,6 @@ server.use(cors(corsOptions));
 //ลองรับ form
 server.use(express.urlencoded({ extended: false }));
 
-console.log("file", "test");
 globSync("./api/**/*.js").forEach((file) => {
   const customFile = file.replace(/\\/g, "/").replace("api", "./api");
   console.log("customFile", customFile);
@@ -41,7 +40,6 @@ globSync("./api/**/*.js").forEach((file) => {
     require(customFile)(req, res, next);
   });
 });
-console.log("file", "test");
 
 const PORT = process.env.PORT || 3000;
 
